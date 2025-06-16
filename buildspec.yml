@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 879381244555.dkr.ecr.ap-northeast-1.amazonaws.com
+  build:
+    commands:
+      - docker build -t bg_deploy_sample_nginx . --platform linux/amd64
+      - docker tag bg_deploy_sample_nginx:latest 879381244555.dkr.ecr.ap-northeast-1.amazonaws.com/bg_deploy_sample_nginx:latest
+  post_build:
+    commands:
+      - docker push 879381244555.dkr.ecr.ap-northeast-1.amazonaws.com/bg_deploy_sample_nginx:latest
+      - printf '{"ImageURI":"%s"}' 879381244555.dkr.ecr.ap-northeast-1.amazonaws.com/bg_deploy_sample_nginx:latest > imageDetail.json
+
+artifacts:
+  files:
+    - imageDetail.json
+    - taskdef.json
+    - appspec.yaml

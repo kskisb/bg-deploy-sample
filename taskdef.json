@@ -1,0 +1,26 @@
+{
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-1:879381244555:task-definition/bg-deploy-sample-taskdef",
+  "taskRoleArn": "arn:aws:iam::879381244555:role/bg-deploy-sample-task-role",
+  "executionRoleArn": "arn:aws:iam::879381244555:role/bg-deploy-sample-execution-role",
+  "containerDefinitions": [
+      {
+          "name": "nginx",
+          "image": "879381244555.dkr.ecr.ap-northeast-1.amazonaws.com/bg_deploy_sample_nginx:latest",
+          "essential": true,
+          "portMappings": [
+              {
+                  "hostPort": 80,
+                  "protocol": "tcp",
+                  "containerPort": 80
+              }
+          ]
+      }
+  ],
+  "requiresCompatibilities": [
+      "FARGATE"
+  ],
+  "networkMode": "awsvpc",
+  "cpu": "256",
+  "memory": "512",
+  "family": "bg-deploy-sample-taskdef"
+}
