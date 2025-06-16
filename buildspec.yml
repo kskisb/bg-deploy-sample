@@ -3,15 +3,19 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 879381244555.dkr.ecr.ap-northeast-1.amazonaws.com
+      - ACCOUNT_ID=879381244555
+      - REGION=ap-northeast-1
+      - REPOSITORY_NAME=bg_deploy_sample_nginx
+      - IMAGE_TAG=latest
+      - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
   build:
     commands:
-      - docker build -t bg_deploy_sample_nginx . --platform linux/amd64
-      - docker tag bg_deploy_sample_nginx:latest 879381244555.dkr.ecr.ap-northeast-1.amazonaws.com/bg_deploy_sample_nginx:latest
+      - docker build -t $REPOSITORY_NAME . --platform linux/amd64
+      - docker tag $REPOSITORY_NAME:$IMAGE_TAG $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPOSITORY_NAME:$IMAGE_TAG
   post_build:
     commands:
-      - docker push 879381244555.dkr.ecr.ap-northeast-1.amazonaws.com/bg_deploy_sample_nginx:latest
-      - printf '{"ImageURI":"%s"}' 879381244555.dkr.ecr.ap-northeast-1.amazonaws.com/bg_deploy_sample_nginx:latest > imageDetail.json
+      - docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPOSITORY_NAME:$IMAGE_TAG
+      - printf '{"ImageURI":"%s"}' $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPOSITORY_NAME:$IMAGE_TAG > imageDetail.json
 
 artifacts:
   files:
