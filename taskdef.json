@@ -5,7 +5,7 @@
   "containerDefinitions": [
       {
           "name": "nginx",
-          "image": "<IMAGE1>",
+          "image": "<IMAGE1_NAME>",
           "essential": true,
           "portMappings": [
               {
